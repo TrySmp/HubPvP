@@ -2,18 +2,15 @@ package me.quared.hubpvp.core;
 
 import lombok.Getter;
 import me.quared.hubpvp.HubPvP;
+import me.quared.hubpvp.util.ItemUtil;
 import me.quared.hubpvp.util.StringUtil;
-import me.quared.itemguilib.items.CustomItem;
-import me.quared.itemguilib.items.CustomItemManager;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +23,7 @@ public class PvPManager {
 	private final Map<Player, BukkitRunnable> currentTimers;
 	private final List<OldPlayerData> oldPlayerDataList;
 
-	private CustomItem weapon, helmet, chestplate, leggings, boots;
+	private ItemStack weapon, chestplate, leggings;
 
 	public PvPManager() {
 		playerPvpStates = new HashMap<>();
@@ -37,48 +34,32 @@ public class PvPManager {
 	}
 
 	public void loadItems() {
-		// Weapon
-		weapon = getItemFromConfig("weapon");
+		weapon = new ItemUtil(Material.DIAMOND_SWORD)
+				.setName(StringUtil.colorize("&#559eff&lPvP Sword"))
+				.addItemFlag(ItemFlag.HIDE_UNBREAKABLE)
+				.addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
+				.addItemFlag(ItemFlag.HIDE_ENCHANTS)
+				.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2)
+				.setUnbreakable()
+				.toItemStack();
 
-		// Armor
-		helmet = getItemFromConfig("helmet");
-		chestplate = getItemFromConfig("chestplate");
-		leggings = getItemFromConfig("leggings");
-		boots = getItemFromConfig("boots");
-	}
+		chestplate = new ItemUtil(Material.DIAMOND_CHESTPLATE)
+				.setName(" ")
+				.addItemFlag(ItemFlag.HIDE_UNBREAKABLE)
+				.addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
+				.addItemFlag(ItemFlag.HIDE_ENCHANTS)
+				.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2)
+				.setUnbreakable()
+				.toItemStack();
 
-	public CustomItem getItemFromConfig(String name) {
-		HubPvP instance = HubPvP.instance();
-		String material = instance.getConfig().getString("items." + name + ".material");
-		if (material == null) {
-			instance.getLogger().warning("Material for item " + name + " is null!");
-			return null;
-		}
-		CustomItem item = CustomItemManager.get().createCustomItem(new ItemStack(Material.valueOf(material)));
-
-		String itemName = instance.getConfig().getString("items." + name + ".name");
-		if (itemName != null && !itemName.isEmpty()) item.setName(StringUtil.colorize(itemName));
-
-		List<String> lore = instance.getConfig().getStringList("items." + name + ".lore");
-		if (!(lore.size() == 1 && lore.get(0).isEmpty())) item.addLore(StringUtil.colorize(lore));
-
-		List<String> enchants = instance.getConfig().getStringList("items." + name + ".enchantments");
-		if (enchants != null && !enchants.isEmpty()) {
-			for (String enchant : enchants) {
-				String[] split = enchant.split(":");
-				Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(split[0].toLowerCase()));
-				if (enchantment == null) {
-					HubPvP.instance().getLogger().warning("Could not find enchantment " + split[0]);
-					continue;
-				}
-				item.getItemStack().addEnchantment(enchantment, Integer.parseInt(split[1]));
-			}
-		}
-
-		item.addFlags(ItemFlag.HIDE_UNBREAKABLE);
-		item.setUnbreakable(true);
-
-		return item;
+		leggings = new ItemUtil(Material.DIAMOND_LEGGINGS)
+				.setName(" ")
+				.addItemFlag(ItemFlag.HIDE_UNBREAKABLE)
+				.addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
+				.addItemFlag(ItemFlag.HIDE_ENCHANTS)
+				.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2)
+				.setUnbreakable()
+				.toItemStack();
 	}
 
 	public void enablePvP(Player player) {
@@ -88,25 +69,23 @@ public class PvPManager {
 		getOldPlayerDataList().add(new OldPlayerData(player, player.getInventory().getArmorContents(), player.getAllowFlight()));
 
 		player.setAllowFlight(false);
-		player.getInventory().setHelmet(getHelmet().getItemStack());
-		player.getInventory().setChestplate(getChestplate().getItemStack());
-		player.getInventory().setLeggings(getLeggings().getItemStack());
-		player.getInventory().setBoots(getBoots().getItemStack());
+		player.getInventory().setChestplate(getChestplate());
+		player.getInventory().setLeggings(getLeggings());
 
-		player.sendMessage(StringUtil.colorize(HubPvP.instance().getConfig().getString("lang.pvp-enabled")));
+		player.sendMessage(StringUtil.colorize(HubPvP.getInstance().getConfig().getString("lang.pvp-enabled")));
 	}
 
-	public void setPlayerState(Player p, PvPState state) {
-		playerPvpStates.put(p, state);
+	public void setPlayerState(Player player, PvPState state) {
+		playerPvpStates.put(player, state);
 	}
 
-	public @Nullable OldPlayerData getOldData(Player p) {
-		return oldPlayerDataList.stream().filter(data -> data.player().equals(p)).findFirst().orElse(null);
+	public OldPlayerData getOldData(Player player) {
+		return oldPlayerDataList.stream().filter(data -> data.player().equals(player)).findFirst().orElse(null);
 	}
 
-	public void removePlayer(Player p) {
-		disablePvP(p);
-		playerPvpStates.remove(p);
+	public void removePlayer(Player player) {
+		disablePvP(player);
+		playerPvpStates.remove(player);
 	}
 
 	public void disablePvP(Player player) {
@@ -121,12 +100,14 @@ public class PvPManager {
 			player.setAllowFlight(oldPlayerData.canFly());
 		}
 
-		player.sendMessage(StringUtil.colorize(HubPvP.instance().getConfig().getString("lang.pvp-disabled")));
+		player.sendMessage(StringUtil.colorize(HubPvP.getInstance().getConfig().getString("lang.pvp-disabled")));
 	}
 
 	public void disable() {
-		for (Player p : playerPvpStates.keySet()) {
-			if (isInPvP(p)) disablePvP(p);
+		for (Player player : playerPvpStates.keySet()) {
+			if (isInPvP(player)) {
+				disablePvP(player);
+			}
 		}
 		playerPvpStates.clear();
 	}
@@ -135,26 +116,26 @@ public class PvPManager {
 		return getPlayerState(player) == PvPState.ON || getPlayerState(player) == PvPState.DISABLING;
 	}
 
-	public PvPState getPlayerState(Player p) {
-		return playerPvpStates.get(p);
+	public PvPState getPlayerState(Player player) {
+		return playerPvpStates.get(player);
 	}
 
-	public void giveWeapon(Player p) {
-		p.getInventory().setItem(HubPvP.instance().getConfig().getInt("items.weapon.slot") - 1, getWeapon().getItemStack());
+	public void giveWeapon(Player player) {
+		player.getInventory().setItem(4, getWeapon());
 	}
 
-	public void putTimer(Player p, BukkitRunnable timerTask) {
-		if (getCurrentTimers().containsKey(p)) {
-			getCurrentTimers().get(p).cancel();
+	public void putTimer(Player player, BukkitRunnable timerTask) {
+		if (getCurrentTimers().containsKey(player)) {
+			getCurrentTimers().get(player).cancel();
 		}
-		getCurrentTimers().put(p, timerTask);
+		getCurrentTimers().put(player, timerTask);
 	}
 
-	public void removeTimer(Player p) {
-		if (getCurrentTimers().containsKey(p)) {
-			getCurrentTimers().get(p).cancel();
+	public void removeTimer(Player player) {
+		if (getCurrentTimers().containsKey(player)) {
+			getCurrentTimers().get(player).cancel();
 		}
-		getCurrentTimers().remove(p);
+		getCurrentTimers().remove(player);
 	}
 
 }

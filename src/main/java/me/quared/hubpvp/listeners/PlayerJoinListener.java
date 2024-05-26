@@ -8,31 +8,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerJoinListener implements Listener {
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        Player p = e.getPlayer();
-        PvPManager pvPManager = HubPvP.instance().pvpManager();
+    public void handle(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        PvPManager pvpManager = HubPvP.getInstance().getPvpManager();
 
-
-        if (p.hasPermission("hubpvp.use") &&
-                !HubPvP.instance().getConfig().getStringList("disabled-worlds").contains(p.getWorld().getName())) {
-            pvPManager.giveWeapon(p);
+        if (player.hasPermission("hubpvp.use") && !HubPvP.getInstance().getConfig().getStringList("disabled-worlds").contains(player.getWorld().getName())) {
+            pvpManager.giveWeapon(player);
         }
 
-        pvPManager.getOldPlayerDataList().add(new OldPlayerData(p, p.getInventory().getArmorContents(), p.getAllowFlight()));
-        pvPManager.setPlayerState(p, PvPState.OFF);
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        Player p = e.getPlayer();
-        PvPManager pvPManager = HubPvP.instance().pvpManager();
-
-        pvPManager.removePlayer(p);
+        pvpManager.getOldPlayerDataList().add(new OldPlayerData(player, player.getInventory().getArmorContents(), player.getAllowFlight()));
+        pvpManager.setPlayerState(player, PvPState.OFF);
     }
 
 }
