@@ -121,7 +121,7 @@ public class PvPManager {
 	}
 
 	public void giveWeapon(Player player) {
-		player.getInventory().setItem(4, getWeapon());
+		player.getInventory().setItem(HubPvP.getInstance().getConfig().getInt("sword-slot"), getWeapon());
 	}
 
 	public void putTimer(Player player, BukkitRunnable timerTask) {
