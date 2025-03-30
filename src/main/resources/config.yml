@@ -1,7 +1,7 @@
 # Change the cooldown when enabling/disabling PvP (seconds). Set to 0 to disable.
 enable-cooldown: 5
 disable-cooldown: 0
-
+sword-slot: 0
 # Respawn location
 respawn:
   enabled: true # Should the plugin teleport a player when they die?
