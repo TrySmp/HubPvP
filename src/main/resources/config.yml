@@ -24,11 +24,11 @@ disabled-worlds:
 # --------------------------------------------------
 
 lang:
-  pvp-enabled: '&8▏ &#559effTrySmp &8» &7PvP &#7cfc00enabled&7!'
-  pvp-enabling: '&8▏ &#559effTrySmp &8» &7PvP enabling in &7&n%time% &7second(s).'
-  pvp-disabled: '&8▏ &#559effTrySmp &8» &7PvP &#ff0000disabled&7!'
-  pvp-disabling: '&8▏ &#559effTrySmp &8» &7PvP disabling in &7&n%time% &7second(s).'
-  reloaded: '&aSuccessfully reloaded the HubPvP config!'
-  killed: '&8▏ &#559effTrySmp &8» &#ff0000%killer% &7has killed you.'
-  killed-other: '&8▏ &#559effTrySmp &8» &7You have killed &#ff0000%killed%&7!'
-  disabled-in-world: "&cYou may not use this in this world!"
+  pvp-enabled: '&8▏ &#559effTrySmp &8» &7PvP &#7cfc00enabled&7'
+  pvp-enabling: '&8▏ &#559effTrySmp &8» &7PvP enabling in &7&n%time%&7 second(s)'
+  pvp-disabled: '&8▏ &#559effTrySmp &8» &7PvP &#ff0000disabled&7'
+  pvp-disabling: '&8▏ &#559effTrySmp &8» &7PvP disabling in &7&n%time%&7 second(s)'
+  reloaded: '&aSuccessfully reloaded the HubPvP config'
+  killed: '&8▏ &#559effTrySmp &8» &#ff0000%killer% &7has killed you'
+  killed-other: '&8▏ &#559effTrySmp &8» &7You have killed &#ff0000%killed%&7'
+  disabled-in-world: "&cYou may not use this in this world"
