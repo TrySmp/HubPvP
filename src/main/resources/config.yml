@@ -1,6 +1,6 @@
 # Change the cooldown when enabling/disabling PvP (seconds). Set to 0 to disable.
 enable-cooldown: 5
-disable-cooldown: 0
+disable-cooldown: 5
 sword-slot: 0
 # Respawn location
 respawn:
