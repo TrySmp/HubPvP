@@ -35,11 +35,11 @@ public class PvPManager {
 
 	public void loadItems() {
 		weapon = new ItemUtil(Material.DIAMOND_SWORD)
-				.setName(StringUtil.colorize("&#559eff&lPvP Sword"))
+				.setName(StringUtil.colorize(HubPvP.getInstance().getConfig().getString("sword.name")))
 				.addItemFlag(ItemFlag.HIDE_UNBREAKABLE)
 				.addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
 				.addItemFlag(ItemFlag.HIDE_ENCHANTS)
-				.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2)
+				.addEnchantment(Enchantment.PROTECTION, 2)
 				.setUnbreakable()
 				.toItemStack();
 
@@ -48,7 +48,7 @@ public class PvPManager {
 				.addItemFlag(ItemFlag.HIDE_UNBREAKABLE)
 				.addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
 				.addItemFlag(ItemFlag.HIDE_ENCHANTS)
-				.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2)
+				.addEnchantment(Enchantment.PROTECTION,2)
 				.setUnbreakable()
 				.toItemStack();
 
@@ -57,7 +57,7 @@ public class PvPManager {
 				.addItemFlag(ItemFlag.HIDE_UNBREAKABLE)
 				.addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
 				.addItemFlag(ItemFlag.HIDE_ENCHANTS)
-				.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2)
+				.addEnchantment(Enchantment.PROTECTION, 2)
 				.setUnbreakable()
 				.toItemStack();
 	}
@@ -121,7 +121,7 @@ public class PvPManager {
 	}
 
 	public void giveWeapon(Player player) {
-		player.getInventory().setItem(HubPvP.getInstance().getConfig().getInt("sword-slot"), getWeapon());
+		player.getInventory().setItem(HubPvP.getInstance().getConfig().getInt("sword.slot"), getWeapon());
 	}
 
 	public void putTimer(Player player, BukkitRunnable timerTask) {

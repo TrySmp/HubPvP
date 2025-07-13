@@ -2,6 +2,10 @@
 enable-cooldown: 5
 disable-cooldown: 5
 sword-slot: 2
+sword:
+  name: "&#559effPvP Sword"
+  slot: 2
+
 # Respawn location
 respawn:
   enabled: true # Should the plugin teleport a player when they die?
